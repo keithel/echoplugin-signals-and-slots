@@ -64,6 +64,8 @@ EchoWindow::EchoWindow()
         lineEdit->setEnabled(false);
         button->setEnabled(false);
     }
+
+    connect(echoInterface->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
 }
 //! [0]
 
@@ -81,6 +83,8 @@ void EchoWindow::createGUI()
     lineEdit = new QLineEdit;
     label = new QLabel;
     label->setFrameStyle(QFrame::Box | QFrame::Plain);
+    slotLabel = new QLabel;
+    slotLabel->setFrameStyle(QFrame::Box | QFrame::Plain);
     button = new QPushButton(tr("Send Message"));
 
     connect(lineEdit, SIGNAL(editingFinished()),
@@ -93,7 +97,9 @@ void EchoWindow::createGUI()
     layout->addWidget(lineEdit, 0, 1);
     layout->addWidget(new QLabel(tr("Answer:")), 1, 0);
     layout->addWidget(label, 1, 1);
-    layout->addWidget(button, 2, 1, Qt::AlignRight);
+    layout->addWidget(new QLabel(tr("Signaled Answer:")), 2, 0);
+    layout->addWidget(slotLabel, 2, 1);
+    layout->addWidget(button, 3, 1, Qt::AlignRight);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 }
 //! [2]

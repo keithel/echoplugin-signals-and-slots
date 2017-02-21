@@ -81,6 +81,7 @@ private:
     EchoInterface *echoInterface;
     QLineEdit *lineEdit;
     QLabel *label;
+    QLabel *slotLabel;
     QPushButton *button;
     QGridLayout *layout;
 };

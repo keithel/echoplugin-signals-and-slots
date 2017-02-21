@@ -52,13 +52,22 @@
 #define ECHOINTERFACE_H
 
 #include <QString>
+#include <QObject>
 
 //! [0]
 class EchoInterface
 {
 public:
     virtual ~EchoInterface() {}
+    virtual QObject* getObject() = 0;
     virtual QString echo(const QString &message) = 0;
+
+    // NOTE: Plugin signals used in the application cannot be
+    //   type-checked at compile time. Erroneous signal slot
+    //   connections are caught at the time the connections are made.
+
+    // signals:
+    // void echoSignal(QString message);
 };
 
 

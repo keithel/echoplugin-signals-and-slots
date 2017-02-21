@@ -55,6 +55,15 @@
 //! [0]
 QString EchoPlugin::echo(const QString &message)
 {
-    return message;
+    QString result = message.isEmpty() ? message : (message + " " + message);
+    emit echoSignal(result + " signaled");
+    return result;
 }
 //! [0]
+
+//! [1]
+QObject* EchoPlugin::getObject()
+{
+    return this;
+}
+//! [1]
