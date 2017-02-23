@@ -53,7 +53,7 @@
 #include "rot13-plugin.h"
 
 //! [0]
-QString EchoPlugin::echo(const QString &message)
+QString Rot13Plugin::echo(const QString &message)
 {
     QString result = rot13(message);
     emit echoSignal(result + " signaled");
@@ -62,13 +62,13 @@ QString EchoPlugin::echo(const QString &message)
 //! [0]
 
 //! [1]
-QObject* EchoPlugin::getObject()
+QObject* Rot13Plugin::getObject()
 {
     return this;
 }
 //! [1]
 
-QString EchoPlugin::rot13(const QString &str)
+QString Rot13Plugin::rot13(const QString &str)
 {
     QString result(str);
     for(auto i = 0; i < str.length(); i++)

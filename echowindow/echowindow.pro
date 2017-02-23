@@ -14,6 +14,9 @@ win32 {
     DESTDIR    = ../
 }
 
+HEADERS    += pluginmanager.h
+SOURCES    += pluginmanager.cpp
+
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/tools/echoplugin
 INSTALLS += target

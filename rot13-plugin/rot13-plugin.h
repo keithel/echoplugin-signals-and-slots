@@ -56,7 +56,7 @@
 #include "echointerface.h"
 
 //! [0]
-class EchoPlugin : public QObject, EchoInterface
+class Rot13Plugin : public QObject, EchoInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.Examples.EchoInterface" FILE "rot13-plugin.json")

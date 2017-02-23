@@ -55,6 +55,7 @@
 
 //! [0]
 EchoWindow::EchoWindow()
+    : pluginManager(PluginManager::instance())
 {
     createGUI();
     setLayout(layout);
@@ -68,7 +69,7 @@ EchoWindow::EchoWindow()
     else
     {
         qDebug().nospace().noquote() << "Using " << pluginNameLabel->text() << " plugin";
-        connect(echoInterface->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
+        connect(pluginManager->currentPlugin()->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
     }
 }
 //! [0]
@@ -76,7 +77,7 @@ EchoWindow::EchoWindow()
 //! [1]
 void EchoWindow::sendEcho()
 {
-    QString text = echoInterface->echo(lineEdit->text());
+    QString text = pluginManager->currentPlugin()->echo(lineEdit->text());
     label->setText(text);
 }
 //! [1]
@@ -107,6 +108,8 @@ void EchoWindow::createGUI()
     layout->addWidget(slotLabel, 3, 1);
     layout->addWidget(button, 4, 1, Qt::AlignRight);
     layout->setSizeConstraint(QLayout::SetFixedSize);
+
+    connect(pluginManager, SIGNAL(currentPluginNameChanged(QString)), pluginNameLabel, SLOT(setText(QString)));
 }
 //! [2]
 
@@ -115,35 +118,11 @@ bool EchoWindow::loadPlugin()
 {
     bool loadOk = false;
 
-    QDir pluginsDir(qApp->applicationDirPath());
-#if defined(Q_OS_WIN)
-    if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
-        pluginsDir.cdUp();
-#elif defined(Q_OS_MAC)
-    if (pluginsDir.dirName() == "MacOS") {
-        pluginsDir.cdUp();
-        pluginsDir.cdUp();
-        pluginsDir.cdUp();
-    }
-#endif
-    pluginsDir.cd("plugins");
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        bool skipPlugin = echoInterface && (qrand() % 2);
-//        qDebug().nospace() << (skipPlugin ? "Not h" : "H") << "andling plugin " << fileName;
+    foreach (QString pluginName, pluginManager->pluginNames()) {
+        bool skipPlugin = pluginManager->currentPlugin() && (qrand() % 2);
         if(skipPlugin)
             continue; // Have some randomness in what plugin is used.
-        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        QObject *plugin = pluginLoader.instance();
-        if (plugin) {
-            if (echoInterface != nullptr)
-                delete echoInterface;
-            echoInterface = qobject_cast<EchoInterface *>(plugin);
-            if (echoInterface)
-            {
-                pluginNameLabel->setText(fileName);
-                loadOk = true;
-            }
-        }
+        loadOk = pluginManager->loadPlugin(pluginName);
     }
 
     return loadOk;

@@ -53,7 +53,7 @@
 
 #include <QWidget>
 
-#include "echointerface.h"
+#include "pluginmanager.h"
 
 QT_BEGIN_NAMESPACE
 class QString;
@@ -78,7 +78,7 @@ private:
     void createGUI();
     bool loadPlugin();
 
-    EchoInterface *echoInterface = nullptr;
+    PluginManager* pluginManager = nullptr;
     QLabel *pluginNameLabel = nullptr;
     QLineEdit *lineEdit = nullptr;
     QLabel *label = nullptr;
