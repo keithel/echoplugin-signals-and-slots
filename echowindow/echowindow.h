@@ -78,12 +78,13 @@ private:
     void createGUI();
     bool loadPlugin();
 
-    EchoInterface *echoInterface;
-    QLineEdit *lineEdit;
-    QLabel *label;
-    QLabel *slotLabel;
-    QPushButton *button;
-    QGridLayout *layout;
+    EchoInterface *echoInterface = nullptr;
+    QLabel *pluginNameLabel = nullptr;
+    QLineEdit *lineEdit = nullptr;
+    QLabel *label = nullptr;
+    QLabel *slotLabel = nullptr;
+    QPushButton *button = nullptr;
+    QGridLayout *layout = nullptr;
 };
 //! [0]
 

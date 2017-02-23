@@ -1,5 +1,6 @@
 #! [0]
 TEMPLATE    = subdirs
 SUBDIRS	    = echowindow \
-	      plugin
+              plugin \
+              rot13-plugin
 #! [0]

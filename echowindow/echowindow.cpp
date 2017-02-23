@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QtWidgets>
+#include <QDebug>
 
 #include "echowindow.h"
 
@@ -64,8 +65,11 @@ EchoWindow::EchoWindow()
         lineEdit->setEnabled(false);
         button->setEnabled(false);
     }
-
-    connect(echoInterface->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
+    else
+    {
+        qDebug().nospace().noquote() << "Using " << pluginNameLabel->text() << " plugin";
+        connect(echoInterface->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
+    }
 }
 //! [0]
 
@@ -80,6 +84,7 @@ void EchoWindow::sendEcho()
 //! [2]
 void EchoWindow::createGUI()
 {
+    pluginNameLabel = new QLabel;
     lineEdit = new QLineEdit;
     label = new QLabel;
     label->setFrameStyle(QFrame::Box | QFrame::Plain);
@@ -93,13 +98,14 @@ void EchoWindow::createGUI()
             this, SLOT(sendEcho()));
 
     layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Message:")), 0, 0);
-    layout->addWidget(lineEdit, 0, 1);
-    layout->addWidget(new QLabel(tr("Answer:")), 1, 0);
-    layout->addWidget(label, 1, 1);
-    layout->addWidget(new QLabel(tr("Signaled Answer:")), 2, 0);
-    layout->addWidget(slotLabel, 2, 1);
-    layout->addWidget(button, 3, 1, Qt::AlignRight);
+    layout->addWidget(pluginNameLabel, 0, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Message:")), 1, 0);
+    layout->addWidget(lineEdit, 1, 1);
+    layout->addWidget(new QLabel(tr("Answer:")), 2, 0);
+    layout->addWidget(label, 2, 1);
+    layout->addWidget(new QLabel(tr("Signaled Answer:")), 3, 0);
+    layout->addWidget(slotLabel, 3, 1);
+    layout->addWidget(button, 4, 1, Qt::AlignRight);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 }
 //! [2]
@@ -107,6 +113,8 @@ void EchoWindow::createGUI()
 //! [3]
 bool EchoWindow::loadPlugin()
 {
+    bool loadOk = false;
+
     QDir pluginsDir(qApp->applicationDirPath());
 #if defined(Q_OS_WIN)
     if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
@@ -120,15 +128,24 @@ bool EchoWindow::loadPlugin()
 #endif
     pluginsDir.cd("plugins");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        bool skipPlugin = echoInterface && (qrand() % 2);
+//        qDebug().nospace() << (skipPlugin ? "Not h" : "H") << "andling plugin " << fileName;
+        if(skipPlugin)
+            continue; // Have some randomness in what plugin is used.
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
+            if (echoInterface != nullptr)
+                delete echoInterface;
             echoInterface = qobject_cast<EchoInterface *>(plugin);
             if (echoInterface)
-                return true;
+            {
+                pluginNameLabel->setText(fileName);
+                loadOk = true;
+            }
         }
     }
 
-    return false;
+    return loadOk;
 }
 //! [3]

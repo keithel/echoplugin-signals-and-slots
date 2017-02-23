@@ -49,20 +49,36 @@
 ****************************************************************************/
 
 #include <QtWidgets>
-#include <QDateTime>
 
-#include "echowindow.h"
-#include "echointerface.h"
+#include "rot13-plugin.h"
 
 //! [0]
-int main(int argv, char *args[])
+QString EchoPlugin::echo(const QString &message)
 {
-    qsrand((int)QDateTime::currentMSecsSinceEpoch());
-    QApplication app(argv, args);
-
-    EchoWindow window;
-    window.show();
-
-    return app.exec();
+    QString result = rot13(message);
+    emit echoSignal(result + " signaled");
+    return result;
 }
 //! [0]
+
+//! [1]
+QObject* EchoPlugin::getObject()
+{
+    return this;
+}
+//! [1]
+
+QString EchoPlugin::rot13(const QString &str)
+{
+    QString result(str);
+    for(auto i = 0; i < str.length(); i++)
+    {
+        if ( (result[i] >= QChar('A') && result[i] <= QChar('M')) ||
+             (result[i] >= QChar('a') && result[i] <= QChar('m')) )
+            result[i] = (char)(result[i].toLatin1() + 13);
+        else if  ( (result[i] >= QChar('N') && result[i] <= QChar('Z')) ||
+                   (result[i] >= QChar('n') && result[i] <= QChar('z')) )
+            result[i] = (char)(result[i].toLatin1() - 13);
+    }
+    return result;
+}
