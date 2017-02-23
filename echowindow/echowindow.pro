@@ -1,9 +1,8 @@
-QT += widgets
+QT += quick quickcontrols2
 
-HEADERS    = echowindow.h \
-             echointerface.h
-SOURCES    = echowindow.cpp \
-             main.cpp
+HEADERS    = echointerface.h
+SOURCES    = main.cpp
+RESOURCES += qml.qrc
 
 TARGET     = echoplugin
 QMAKE_PROJECT_NAME = echopluginwindow

@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE bool loadPlugin(const QString& name);
     QStringList pluginNames();
     QString currentPluginName();
-    EchoInterface* currentPlugin() { return m_currentPlugin; }
+    Q_INVOKABLE EchoInterface* currentPlugin() { return m_currentPlugin; }
 
 #if defined(QT_QML_LIB)
     static QJSValue singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine);
