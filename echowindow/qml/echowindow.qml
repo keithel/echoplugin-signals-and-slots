@@ -60,14 +60,14 @@ Controls1.ApplicationWindow {
             }
             TextField {
                 id: answerField
-                enabled: false
+                readOnly: true
             }
             Label {
                 text: "Signaled Answer:"
             }
             TextField {
                 id: signaledAnswerField
-                enabled: false
+                readOnly: true
                 Connections {
                     target: plugin
                     onEchoSignal: signaledAnswerField.text = message
