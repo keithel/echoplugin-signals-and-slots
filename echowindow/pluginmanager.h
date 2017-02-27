@@ -15,12 +15,13 @@ class PluginManager : public QObject
     Q_OBJECT
     Q_PROPERTY(QStringList pluginNames READ pluginNames NOTIFY pluginNamesChanged)
     Q_PROPERTY(QString currentPluginName READ currentPluginName NOTIFY currentPluginNameChanged)
+    Q_PROPERTY(QObject* currentPlugin READ currentPlugin NOTIFY currentPluginNameChanged)
 
 public:
     Q_INVOKABLE bool loadPlugin(const QString& name);
     QStringList pluginNames();
     QString currentPluginName();
-    Q_INVOKABLE EchoInterface* currentPlugin() { return m_currentPlugin; }
+    QObject* currentPlugin() { return m_currentPlugin ? m_currentPlugin->getObject() : nullptr; }
 
 #if defined(QT_QML_LIB)
     static QJSValue singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine);

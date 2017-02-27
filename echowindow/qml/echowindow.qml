@@ -15,6 +15,8 @@ Controls1.ApplicationWindow {
     minimumWidth: width
     title: qsTr("Echo Window")
 
+    property QtObject plugin: PluginManager.currentPlugin
+
     menuBar: Controls1.MenuBar {
         Controls1.Menu {
             title: qsTr("File")
@@ -35,7 +37,11 @@ Controls1.ApplicationWindow {
         ComboBox {
             anchors.horizontalCenter: parent.horizontalCenter
             model: PluginManager.pluginNames
-            onCurrentTextChanged: PluginManager.loadPlugin(currentText);
+            onCurrentTextChanged: {
+                console.log("loading plugin " + currentText)
+                PluginManager.loadPlugin(currentText);
+                messageField.text = ""
+            }
         }
 
         GridLayout {
@@ -46,7 +52,6 @@ Controls1.ApplicationWindow {
             TextField {
                 id: messageField
                 onTextChanged: {
-                    var plugin = PluginManager.currentPlugin(); // Can't do this! currentPlugin isn't a QObject derived thing!
                     answerField.text = plugin.echo(text);
                 }
             }
@@ -63,12 +68,11 @@ Controls1.ApplicationWindow {
             TextField {
                 id: signaledAnswerField
                 enabled: false
+                Connections {
+                    target: plugin
+                    onEchoSignal: signaledAnswerField.text = message
+                }
             }
-        }
-
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Echo plugin example")
         }
     }
 }

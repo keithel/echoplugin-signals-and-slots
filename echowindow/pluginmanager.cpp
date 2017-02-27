@@ -55,7 +55,6 @@ bool PluginManager::loadPlugin(const QString &name)
             continue;
 
         QString pluginName(metadata.value("className").toString());
-        qDebug() << "Examining plugin" << pluginName;
         if (pluginName != name)
             continue;
 
