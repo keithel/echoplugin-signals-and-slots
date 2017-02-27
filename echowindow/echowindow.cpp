@@ -68,8 +68,10 @@ EchoWindow::EchoWindow()
     }
     else
     {
-        qDebug().nospace().noquote() << "Using " << pluginNameLabel->text() << " plugin";
-        connect(pluginManager->currentPlugin()->getObject(), SIGNAL(echoSignal(QString)), slotLabel, SLOT(setText(QString)));
+        qDebug().nospace().noquote() << "Using " << pluginNameCombo->currentText() << " plugin";
+        echoSignalConnection = connect(pluginManager->currentPlugin()->getObject(),
+                                       SIGNAL(echoSignal(QString)),
+                                       slotLabel, SLOT(setText(QString)));
     }
 }
 //! [0]
@@ -85,8 +87,11 @@ void EchoWindow::sendEcho()
 //! [2]
 void EchoWindow::createGUI()
 {
-    pluginNameLabel = new QLabel;
+    pluginNameCombo = new QComboBox;
+    pluginNamesModel = new QStringListModel();
+    pluginNameCombo->setModel(pluginNamesModel);
     lineEdit = new QLineEdit;
+    lineEdit->setClearButtonEnabled(true);
     label = new QLabel;
     label->setFrameStyle(QFrame::Box | QFrame::Plain);
     slotLabel = new QLabel;
@@ -99,7 +104,7 @@ void EchoWindow::createGUI()
             this, SLOT(sendEcho()));
 
     layout = new QGridLayout;
-    layout->addWidget(pluginNameLabel, 0, 0, 1, 2);
+    layout->addWidget(pluginNameCombo, 0, 0, 1, 2);
     layout->addWidget(new QLabel(tr("Message:")), 1, 0);
     layout->addWidget(lineEdit, 1, 1);
     layout->addWidget(new QLabel(tr("Answer:")), 2, 0);
@@ -109,7 +114,10 @@ void EchoWindow::createGUI()
     layout->addWidget(button, 4, 1, Qt::AlignRight);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 
-    connect(pluginManager, SIGNAL(currentPluginNameChanged(QString)), pluginNameLabel, SLOT(setText(QString)));
+    connect(pluginManager, SIGNAL(currentPluginNameChanged(QString)),
+            pluginNameCombo, SLOT(setCurrentText(QString)));
+    connect(pluginNameCombo, SIGNAL(currentTextChanged(QString)),
+            this, SLOT(loadPlugin(QString)));
 }
 //! [2]
 
@@ -118,13 +126,39 @@ bool EchoWindow::loadPlugin()
 {
     bool loadOk = false;
 
+    QStringList pluginNames;
     foreach (QString pluginName, pluginManager->pluginNames()) {
-        bool skipPlugin = pluginManager->currentPlugin() && (qrand() % 2);
-        if(skipPlugin)
-            continue; // Have some randomness in what plugin is used.
+        pluginNames.append(pluginName);
         loadOk = pluginManager->loadPlugin(pluginName);
     }
 
+    pluginNamesModel->setStringList(pluginNames);
+    pluginNameCombo->setCurrentText(pluginManager->currentPluginName());
     return loadOk;
 }
 //! [3]
+
+//! [4]
+bool EchoWindow::loadPlugin(const QString& name)
+{
+    // NOOP if plugin specified already loaded.
+    if (name == pluginManager->currentPluginName())
+        return true;
+
+    disconnect(echoSignalConnection);
+
+    bool loadOk = pluginManager->loadPlugin(name);
+    pluginNameCombo->setCurrentText(pluginManager->currentPluginName());
+
+    echoSignalConnection = connect(pluginManager->currentPlugin()->getObject(),
+                                   SIGNAL(echoSignal(QString)),
+                                   slotLabel, SLOT(setText(QString)));
+
+    qDebug().nospace().noquote() << "Using " << pluginNameCombo->currentText() << " plugin";
+    lineEdit->clear();
+    lineEdit->setFocus();
+    lineEdit->clearFocus();
+
+    return loadOk;
+}
+//! [4]

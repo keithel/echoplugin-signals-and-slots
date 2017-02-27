@@ -52,6 +52,7 @@
 #define ECHODIALOG_H
 
 #include <QWidget>
+#include <QStringListModel>
 
 #include "pluginmanager.h"
 
@@ -61,6 +62,7 @@ class QLineEdit;
 class QLabel;
 class QPushButton;
 class QGridLayout;
+class QComboBox;
 QT_END_NAMESPACE
 
 //! [0]
@@ -73,18 +75,22 @@ public:
 
 private slots:
     void sendEcho();
+    bool loadPlugin(const QString& name);
 
 private:
     void createGUI();
     bool loadPlugin();
 
     PluginManager* pluginManager = nullptr;
-    QLabel *pluginNameLabel = nullptr;
+    QComboBox *pluginNameCombo = nullptr;
     QLineEdit *lineEdit = nullptr;
     QLabel *label = nullptr;
     QLabel *slotLabel = nullptr;
     QPushButton *button = nullptr;
     QGridLayout *layout = nullptr;
+
+    QStringListModel* pluginNamesModel = nullptr;
+    QMetaObject::Connection echoSignalConnection;
 };
 //! [0]
 
