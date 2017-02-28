@@ -48,20 +48,18 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets>
+#include <QGuiApplication>
+#include <QtQml/QQmlApplicationEngine>
 #include <QDateTime>
 
-#include "echowindow.h"
-#include "echointerface.h"
-
 //! [0]
-int main(int argv, char *args[])
+int main(int argc, char *argv[])
 {
     qsrand((int)QDateTime::currentMSecsSinceEpoch());
-    QApplication app(argv, args);
+    QGuiApplication app(argc, argv);
 
-    EchoWindow window;
-    window.show();
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/qml/echowindow.qml")));
 
     return app.exec();
 }

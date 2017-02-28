@@ -64,7 +64,7 @@ class EchoPlugin : public QObject, EchoInterface
 
 public:
     QObject* getObject() Q_DECL_OVERRIDE;
-    QString echo(const QString &message) Q_DECL_OVERRIDE;
+    Q_INVOKABLE QString echo(const QString &message) Q_DECL_OVERRIDE;
 
 signals:
     void echoSignal(QString message);

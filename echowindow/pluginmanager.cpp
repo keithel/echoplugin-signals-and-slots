@@ -66,12 +66,12 @@ bool PluginManager::loadPlugin(const QString &name)
         if (!interface)
             continue;
 
-        if (m_currentPlugin != nullptr) {
-            delete m_currentPlugin;
+        if (m_currentPluginInterface != nullptr) {
+            delete m_currentPluginInterface;
             m_currentPluginMetadata = QJsonObject();
         }
 
-        m_currentPlugin = interface;
+        m_currentPluginInterface = interface;
         m_currentPluginMetadata = metadata;
         emit currentPluginNameChanged(currentPluginName());
         loadOk = true;
@@ -110,6 +110,13 @@ QJSValue PluginManager::singletontype_provider(QQmlEngine *engine, QJSEngine *sc
     QJSValue jPluginManager = scriptEngine->newQObject(s_instance);
     return jPluginManager;
 }
+
+void registerQmlSingleton()
+{
+    qmlRegisterSingletonType("com.l3t.EchoPlugin", 1, 0, "PluginManager", PluginManager::singletontype_provider);
+}
+
+Q_COREAPP_STARTUP_FUNCTION(registerQmlSingleton)
 #else
 PluginManager* PluginManager::instance()
 {

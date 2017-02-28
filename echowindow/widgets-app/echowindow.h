@@ -54,7 +54,7 @@
 #include <QWidget>
 #include <QStringListModel>
 
-#include "pluginmanager.h"
+#include "../pluginmanager.h"
 
 QT_BEGIN_NAMESPACE
 class QString;

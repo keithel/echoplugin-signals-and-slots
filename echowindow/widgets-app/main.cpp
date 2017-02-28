@@ -48,30 +48,21 @@
 **
 ****************************************************************************/
 
-#ifndef ECHOPLUGIN_H
-#define ECHOPLUGIN_H
+#include <QtWidgets>
+#include <QDateTime>
 
-#include <QObject>
-#include <QtPlugin>
-#include "echointerface.h"
+#include "echowindow.h"
+#include "../echointerface.h"
 
 //! [0]
-class Rot13Plugin : public QObject, EchoInterface
+int main(int argv, char *args[])
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.Examples.EchoInterface" FILE "rot13-plugin.json")
-    Q_INTERFACES(EchoInterface)
+    qsrand((int)QDateTime::currentMSecsSinceEpoch());
+    QApplication app(argv, args);
 
-public:
-    QObject* getObject() Q_DECL_OVERRIDE;
-    Q_INVOKABLE QString echo(const QString &message) Q_DECL_OVERRIDE;
+    EchoWindow window;
+    window.show();
 
-protected:
-    QString rot13(const QString& string);
-
-signals:
-    void echoSignal(QString message);
-};
+    return app.exec();
+}
 //! [0]
-
-#endif

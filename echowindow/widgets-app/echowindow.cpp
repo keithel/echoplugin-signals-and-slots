@@ -69,7 +69,7 @@ EchoWindow::EchoWindow()
     else
     {
         qDebug().nospace().noquote() << "Using " << pluginNameCombo->currentText() << " plugin";
-        echoSignalConnection = connect(pluginManager->currentPlugin()->getObject(),
+        echoSignalConnection = connect(pluginManager->currentPluginQObject(),
                                        SIGNAL(echoSignal(QString)),
                                        slotLabel, SLOT(setText(QString)));
     }
@@ -150,7 +150,7 @@ bool EchoWindow::loadPlugin(const QString& name)
     bool loadOk = pluginManager->loadPlugin(name);
     pluginNameCombo->setCurrentText(pluginManager->currentPluginName());
 
-    echoSignalConnection = connect(pluginManager->currentPlugin()->getObject(),
+    echoSignalConnection = connect(pluginManager->currentPluginQObject(),
                                    SIGNAL(echoSignal(QString)),
                                    slotLabel, SLOT(setText(QString)));
 
