@@ -51,7 +51,9 @@ Controls1.ApplicationWindow {
             }
             TextField {
                 id: messageField
-                onTextChanged: {
+                onEditingFinished: echo()
+
+                function echo() {
                     answerField.text = plugin.echo(text);
                 }
             }
@@ -72,6 +74,10 @@ Controls1.ApplicationWindow {
                     target: plugin
                     onEchoSignal: signaledAnswerField.text = message
                 }
+            }
+            Button {
+                text: "Send Message"
+                onPressed: messageField.echo()
             }
         }
     }
