@@ -155,9 +155,7 @@ bool EchoWindow::loadPlugin(const QString& name)
                                    slotLabel, SLOT(setText(QString)));
 
     qDebug().nospace().noquote() << "Using " << pluginNameCombo->currentText() << " plugin";
-    lineEdit->clear();
-    lineEdit->setFocus();
-    lineEdit->clearFocus();
+    sendEcho();
 
     return loadOk;
 }
