@@ -38,7 +38,7 @@ Controls1.ApplicationWindow {
             onCurrentTextChanged: {
                 console.log("loading plugin " + currentText)
                 PluginManager.loadPlugin(currentText);
-                messageField.text = ""
+                messageField.echo();
             }
         }
 
