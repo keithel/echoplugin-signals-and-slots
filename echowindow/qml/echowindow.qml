@@ -17,13 +17,9 @@ Controls1.ApplicationWindow {
 
     menuBar: Controls1.MenuBar {
         Controls1.Menu {
-            title: qsTr("File")
+            title: qsTr("&File")
             Controls1.MenuItem {
-                text: qsTr("&Plugin")
-                onTriggered: console.log("Choose Plugin action triggered");
-            }
-            Controls1.MenuItem {
-                text: qsTr("Exit")
+                text: qsTr("E&xit")
                 onTriggered: Qt.quit();
             }
         }
