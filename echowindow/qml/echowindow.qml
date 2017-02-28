@@ -7,12 +7,10 @@ import com.l3t.EchoPlugin 1.0
 
 Controls1.ApplicationWindow {
     visible: true
-    height: 300
-    width: 400
-    maximumHeight: height
-    maximumWidth: width
-    minimumHeight: height
-    minimumWidth: width
+    height: minimumHeight
+    width: minimumWidth
+    minimumHeight: 250
+    minimumWidth: gridlayout.implicitWidth
     title: qsTr("Echo Window")
 
     property QtObject plugin: PluginManager.currentPlugin
@@ -31,10 +29,14 @@ Controls1.ApplicationWindow {
         }
     }
 
-    Column {
+    GridLayout {
+        id: gridlayout
         anchors.fill: parent
-
+        anchors.margins: 5
+        columns: 2
         ComboBox {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
             anchors.horizontalCenter: parent.horizontalCenter
             model: PluginManager.pluginNames
             onCurrentTextChanged: {
@@ -44,41 +46,43 @@ Controls1.ApplicationWindow {
             }
         }
 
-        GridLayout {
-            columns: 2
-            Label {
-                text: "Message:"
-            }
-            TextField {
-                id: messageField
-                onEditingFinished: echo()
+        Label {
+            text: "Message:"
+        }
+        TextField {
+            id: messageField
+            Layout.fillWidth: true
+            onEditingFinished: echo()
 
-                function echo() {
-                    answerField.text = plugin.echo(text);
-                }
+            function echo() {
+                answerField.text = plugin.echo(text);
             }
-            Label {
-                text: "Answer:"
+        }
+        Label {
+            text: "Answer:"
+        }
+        TextField {
+            id: answerField
+            Layout.fillWidth: true
+            readOnly: true
+        }
+        Label {
+            text: "Signaled Answer:"
+        }
+        TextField {
+            id: signaledAnswerField
+            Layout.fillWidth: true
+            readOnly: true
+            Connections {
+                target: plugin
+                onEchoSignal: signaledAnswerField.text = message
             }
-            TextField {
-                id: answerField
-                readOnly: true
-            }
-            Label {
-                text: "Signaled Answer:"
-            }
-            TextField {
-                id: signaledAnswerField
-                readOnly: true
-                Connections {
-                    target: plugin
-                    onEchoSignal: signaledAnswerField.text = message
-                }
-            }
-            Button {
-                text: "Send Message"
-                onPressed: messageField.echo()
-            }
+        }
+        Button {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            text: "Send Message"
+            onPressed: messageField.echo()
         }
     }
 }
