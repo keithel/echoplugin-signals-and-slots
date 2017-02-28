@@ -52,7 +52,7 @@
 #include <QDateTime>
 
 #include "echowindow.h"
-#include "../echointerface.h"
+#include <echointerface.h>
 
 //! [0]
 int main(int argv, char *args[])

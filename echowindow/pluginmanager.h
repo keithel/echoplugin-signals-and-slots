@@ -8,7 +8,7 @@
 #include <QJsonObject>
 #include <QVector>
 #include <QPluginLoader>
-#include "echointerface.h"
+#include <echointerface.h>
 
 class PluginManager : public QObject
 {

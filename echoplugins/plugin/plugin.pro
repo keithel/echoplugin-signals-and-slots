@@ -2,11 +2,13 @@
 TEMPLATE        = lib
 CONFIG         += plugin
 QT             += widgets
-INCLUDEPATH    += ../echowindow
-HEADERS         = echoplugin.h
-SOURCES         = echoplugin.cpp
+
+include(../echoplugins.pri)
+
+HEADERS        += echoplugin.h
+SOURCES        += echoplugin.cpp
 TARGET          = $$qtLibraryTarget(echoplugin)
-DESTDIR         = ../plugins
+DESTDIR         = ../../plugins
 #! [0]
 
 EXAMPLE_FILES = echoplugin.json

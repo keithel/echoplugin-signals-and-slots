@@ -2,11 +2,13 @@
 TEMPLATE        = lib
 CONFIG         += plugin
 QT             += widgets
-INCLUDEPATH    += ../echowindow
-HEADERS         = rot13-plugin.h
-SOURCES         = rot13-plugin.cpp
+
+include(../echoplugins.pri)
+
+HEADERS        += rot13-plugin.h
+SOURCES        += rot13-plugin.cpp
 TARGET          = $$qtLibraryTarget(rot13-plugin)
-DESTDIR         = ../plugins
+DESTDIR         = ../../plugins
 #! [0]
 
 EXAMPLE_FILES = rot13-plugin.json
